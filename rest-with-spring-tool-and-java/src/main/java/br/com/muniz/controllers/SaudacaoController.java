@@ -1,4 +1,4 @@
-package br.com.muniz.model.controllers;
+package br.com.muniz.controllers;
 
 import br.com.muniz.model.Saudacao;
 import org.springframework.web.bind.annotation.RequestMapping;
