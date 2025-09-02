@@ -1,9 +1,10 @@
-package br.com.muniz.services;
+package br.com.muniz.unitetests.mapper.services;
 
 import br.com.muniz.data.dto.persondto.PersonDTOV1;
 import br.com.muniz.exception.RequiredObjectIsNullException;
 import br.com.muniz.model.Person;
 import br.com.muniz.repository.PersonRepository;
+import br.com.muniz.services.PersonService;
 import br.com.muniz.unitetests.mapper.mocks.MockPerson;
 
 import org.junit.jupiter.api.BeforeEach;

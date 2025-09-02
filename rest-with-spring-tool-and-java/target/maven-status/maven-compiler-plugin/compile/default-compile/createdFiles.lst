@@ -1,0 +1,15 @@
+br\com\muniz\model\Person.class
+br\com\muniz\controllers\TestLogController.class
+br\com\muniz\controllers\SaudacaoController.class
+br\com\muniz\exception\resourceNotFoundException.class
+br\com\muniz\repository\PersonRepository.class
+br\com\muniz\Starup.class
+br\com\muniz\data\dto\v2\PersonDTOV2.class
+br\com\muniz\controllers\PersonController.class
+br\com\muniz\exception\ExceptionResponse.class
+br\com\muniz\exception\handle\CustomEntityResponseHandler.class
+br\com\muniz\mapper\custom\PersonMapper.class
+br\com\muniz\model\Saudacao.class
+br\com\muniz\mapper\ObjectMapper.class
+br\com\muniz\services\PersonService.class
+br\com\muniz\data\dto\v1\PersonDTOV1.class

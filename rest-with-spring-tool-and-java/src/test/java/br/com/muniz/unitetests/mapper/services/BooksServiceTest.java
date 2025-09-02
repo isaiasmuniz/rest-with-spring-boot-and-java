@@ -1,8 +1,9 @@
-package br.com.muniz.services;
+package br.com.muniz.unitetests.mapper.services;
 
 import br.com.muniz.data.dto.booksdto.BooksDTOV1;
 import br.com.muniz.model.Books;
 import br.com.muniz.repository.BooksRepository;
+import br.com.muniz.services.BooksService;
 import br.com.muniz.unitetests.mapper.mocks.MockBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

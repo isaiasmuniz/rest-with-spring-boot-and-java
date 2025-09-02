@@ -1,8 +1,5 @@
-package br.com.muniz.data.dto.v1;
+package br.com.muniz.data.dto.persondto;
 
-import br.com.muniz.serializer.GenderSerializer;
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;

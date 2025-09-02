@@ -1,6 +1,6 @@
-package br.com.muniz.unitetests.mocks;
+package br.com.muniz.unitetests.mapper.mocks;
 
-import br.com.muniz.data.dto.PersonDTO;
+import br.com.muniz.data.dto.persondto.PersonDTOV1;
 import br.com.muniz.model.Person;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class MockPerson {
         return mockEntity(0);
     }
     
-    public PersonDTO mockDTO() {
+    public PersonDTOV1 mockDTO() {
         return mockDTO(0);
     }
     
@@ -25,8 +25,8 @@ public class MockPerson {
         return persons;
     }
 
-    public List<PersonDTO> mockDTOList() {
-        List<PersonDTO> persons = new ArrayList<>();
+    public List<PersonDTOV1> mockDTOList() {
+        List<PersonDTOV1> persons = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
             persons.add(mockDTO(i));
         }
@@ -35,7 +35,7 @@ public class MockPerson {
     
     public Person mockEntity(Integer number) {
         Person person = new Person();
-       // person.setAddress("Address Test" + number);
+        person.setAdress("Address Test" + number);
         person.setFirstName("First Name Test" + number);
         person.setGender(((number % 2)==0) ? "Male" : "Female");
         person.setId(number.longValue());
@@ -43,9 +43,9 @@ public class MockPerson {
         return person;
     }
 
-    public PersonDTO mockDTO(Integer number) {
-        PersonDTO person = new PersonDTO();
-       // person.setAddress("Address Test" + number);
+    public PersonDTOV1 mockDTO(Integer number) {
+        PersonDTOV1 person = new PersonDTOV1();
+        person.setAdress("Address Test" + number);
         person.setFirstName("First Name Test" + number);
         person.setGender(((number % 2)==0) ? "Male" : "Female");
         person.setId(number.longValue());
