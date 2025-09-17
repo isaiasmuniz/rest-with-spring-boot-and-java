@@ -1,6 +1,7 @@
 package br.com.muniz.data.dto.persondto;
 
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 //@JsonPropertyOrder({"id, first_name, last_name, gender, adress"})
 //@JsonFilter("persinFilter")
+@Relation(collectionRelation = "people")
 public class PersonDTOV1 extends RepresentationModel<PersonDTOV1> implements Serializable {
 
     private static final long serialVersionUID = 1l;
@@ -21,6 +23,7 @@ public class PersonDTOV1 extends RepresentationModel<PersonDTOV1> implements Ser
     //@JsonInclude(JsonInclude.Include.NON_NULL)
     private String lastName;
     private String adress;
+    private Boolean enabled;
 
     //private String sensitveData;
 
@@ -109,15 +112,25 @@ public class PersonDTOV1 extends RepresentationModel<PersonDTOV1> implements Ser
 //    }
 
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public PersonDTOV1 setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PersonDTOV1 that)) return false;
-        return id == that.id && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(adress, that.adress) && Objects.equals(gender, that.gender);
+        if (!super.equals(o)) return false;
+        return id == that.id && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(adress, that.adress) && Objects.equals(enabled, that.enabled) && Objects.equals(gender, that.gender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, adress, gender);
+        return Objects.hash(super.hashCode(), id, firstName, lastName, adress, enabled, gender);
     }
 }
 

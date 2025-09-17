@@ -9,6 +9,12 @@ import br.com.muniz.repository.BooksRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +31,9 @@ public class BooksService {
     BooksRepository repository;
 
     private Logger logger = LoggerFactory.getLogger(PersonService.class.getName());
+
+    @Autowired
+    PagedResourcesAssembler assembler;
 
 
     public BooksDTOV1 findById(Long id){
@@ -68,18 +77,30 @@ public class BooksService {
         repository.delete(entity);
     }
 
-    public List<BooksDTOV1> findAll(){
+    public PagedModel<EntityModel<BooksDTOV1>> findAll(Pageable pageable){
         logger.info("find all books");
-        var books = parselistObject(repository.findAll(), BooksDTOV1.class);
-        books.forEach(this::addHateoasLinks);
-        return books;
+
+        var book = repository.findAll(pageable);
+        var bookWithLinks = book.map(books ->{
+            var dto = parseObject(books, BooksDTOV1.class);
+            addHateoasLinks(dto);
+            return dto;
+        });
+        Link findAllLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BookController.class)
+                .findAll(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        String.valueOf(pageable.getSort())
+                )).withSelfRel();
+
+        return assembler.toModel(bookWithLinks, findAllLink);
     }
 
     private void addHateoasLinks(BooksDTOV1 dto){
         dto.add(linkTo(methodOn(BookController.class).findById(dto.getId())).withSelfRel().withType("GET"));
-        dto.add(linkTo(methodOn(BookController.class).findAll()).withRel("find all").withType("GET"));
+        dto.add(linkTo(methodOn(BookController.class).findAll(1, 15, "asc")).withRel("find all").withType("GET"));
         dto.add(linkTo(methodOn(BookController.class).create(dto)).withRel("create").withType("POST"));
-//        dto.add(linkTo(methodOn(BookController.class).update(dto).withRel("update")).withType("PUT"));
+        dto.add(linkTo(methodOn(BookController.class).update(dto)).withRel("update").withType("PUT"));
         dto.add(linkTo(methodOn(BookController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
     }
 }

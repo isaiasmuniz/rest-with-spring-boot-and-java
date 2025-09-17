@@ -1,4 +1,4 @@
-package br.com.muniz.integrationtests.controllers.withjson;
+package br.com.muniz.integrationtests.controllers.cors.withjson;
 
 import br.com.muniz.config.TestConig;
 import br.com.muniz.integrationtests.dto.PersonDTOV1;
@@ -16,9 +16,12 @@ import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT) // properties = {"spring.profiles.active=test", "server.port=8888"}
+//porta do tomcat foi configurada no initializer(AbstractIntegrationTest), se não teria que usar linha acima para definir a porta por meio do properties
+//sping booy estava subindo subindo o tomcat na porta 8080 devido a prioridade das chamadas(yml tem prioridade menor)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PersonControllerCorsTest extends AbstractIntegrationTest{
 
@@ -29,8 +32,9 @@ class PersonControllerCorsTest extends AbstractIntegrationTest{
     @BeforeAll
     static void setUp() {
         objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         person = new PersonDTOV1();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
     }
 
     @Test
@@ -42,7 +46,6 @@ class PersonControllerCorsTest extends AbstractIntegrationTest{
                 .addHeader(TestConig.HEADER_PARAM_ORIGIN, TestConig.ORIGIN_MUNIZ)
                 .setBasePath("/api/person/v1")
                 .setPort(TestConig.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .build();
 
@@ -57,9 +60,9 @@ class PersonControllerCorsTest extends AbstractIntegrationTest{
                 .body()
                 .asString();
 
-
         PersonDTOV1 createdPerson = objectMapper.readValue(content, PersonDTOV1.class);
         person = createdPerson;
+//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!" + createdPerson);
 
         assertNotNull(createdPerson.getId());
         assertNotNull(createdPerson.getFirstName());

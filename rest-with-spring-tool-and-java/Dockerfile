@@ -1,5 +1,4 @@
-services:
-  app:
-    build: .
-    ports:
-      - "8080:8888"   # HOST:CONTAINER
+FROM eclipse-temurin:21-jdk
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]

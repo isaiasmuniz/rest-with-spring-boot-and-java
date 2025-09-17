@@ -86,8 +86,15 @@
 		</dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>mysql</artifactId>>
-            <version>${testcontainers.version}</version>
+            <artifactId>testcontainers</artifactId>
+            <version>${testcontainers.version}</version> <!-- ou a versão mais recente -->
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+            <version>${testcontainers.version}</version> <!-- mesma versão do core -->
             <scope>test</scope>
         </dependency>
 

@@ -1,12 +1,14 @@
-package br.com.muniz.integrationtests.controllers.withjson;
+package br.com.muniz.integrationtests.controllers.withXml;
 
 import br.com.muniz.config.TestConig;
 import br.com.muniz.integrationtests.dto.PersonDTOV1;
+import br.com.muniz.integrationtests.dto.wrapper.xml.PageModelPerson;
 import br.com.muniz.integrationtests.integrationTestsContainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -15,7 +17,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -24,15 +25,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerJsonTest extends AbstractIntegrationTest{
+class PersonControllerXmlTest extends AbstractIntegrationTest{
 
     private static RequestSpecification specification;
-    private static ObjectMapper objectMapper;
+    private static XmlMapper objectMapper;
     private static PersonDTOV1 person;
 
     @BeforeAll
     static void setUp() {
-        objectMapper = new ObjectMapper();
+        objectMapper = new XmlMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         person = new PersonDTOV1();
     }
@@ -51,7 +52,8 @@ class PersonControllerJsonTest extends AbstractIntegrationTest{
                 .build();
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .body(person)
                 .when()
                 .post()
@@ -79,7 +81,8 @@ class PersonControllerJsonTest extends AbstractIntegrationTest{
     void findBiIdTest() throws JsonProcessingException {
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .pathParams("id", person.getId())
                 .when()
                 .get("{id}")
@@ -112,7 +115,8 @@ class PersonControllerJsonTest extends AbstractIntegrationTest{
         person.setAdress("fortal city");
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .body(person)
                 .when()
                 .put()
@@ -144,7 +148,8 @@ class PersonControllerJsonTest extends AbstractIntegrationTest{
         person.setEnabled(false);
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .pathParam("id", person.getId())
                 .when()
                 .patch("{id}")
@@ -183,7 +188,9 @@ class PersonControllerJsonTest extends AbstractIntegrationTest{
     void findAllTest() throws JsonProcessingException {
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .queryParams("page", 3, "size", 12, "direction", "asc")
                 .when()
                 .get()
                 .then()
@@ -192,7 +199,8 @@ class PersonControllerJsonTest extends AbstractIntegrationTest{
                 .body()
                 .asString();
 
-        List<PersonDTOV1> perons = objectMapper.readValue(content, new TypeReference<List<PersonDTOV1>>() {});
+        PageModelPerson wrapper = objectMapper.readValue(content, PageModelPerson.class);
+        List<PersonDTOV1> perons = wrapper.getContent();
 
         PersonDTOV1 personOne = perons.get(0);
         person = personOne;
@@ -200,33 +208,22 @@ class PersonControllerJsonTest extends AbstractIntegrationTest{
 
         assertNotNull(personOne.getId());
 
-        assertEquals("Pedro", personOne.getFirstName());
-        assertEquals("Matador", personOne.getLastName());
-        assertEquals("Parangaba - Fortaleza - CE - 6669", personOne.getAdress());
-        assertEquals("female", personOne.getGender());
-        assertTrue(personOne.getEnabled());
+        assertEquals("Allianora", personOne.getFirstName());
+        assertEquals("Whardley", personOne.getLastName());
+        assertEquals("Room 847", personOne.getAdress());
+        assertEquals("Female", personOne.getGender());
+        assertFalse(personOne.getEnabled());
 
         PersonDTOV1 personSeven = perons.get(2);
         person = personSeven;
 
         assertNotNull(personSeven.getId());
 
-        assertEquals("Braian", personSeven.getFirstName());
-        assertEquals("Temoteo", personSeven.getLastName());
-        assertEquals("Maranguape - Fortaleza - CE", personSeven.getAdress());
-        assertEquals("male", personSeven.getGender());
+        assertEquals("Amalle", personSeven.getFirstName());
+        assertEquals("Dundredge", personSeven.getLastName());
+        assertEquals("PO Box 16019", personSeven.getAdress());
+        assertEquals("Female", personSeven.getGender());
         assertTrue(personSeven.getEnabled());
-
-        PersonDTOV1 personSix = perons.get(6);
-
-        assertNotNull(personSix.getId());
-
-        assertEquals("Xaulin", personSix.getFirstName());
-        assertEquals("Matador de porco", personSix.getLastName());
-        assertEquals("Maranguape - Fortaleza - CE", personSix.getAdress());
-        assertEquals("male", personSix.getGender());
-        assertTrue(personSix.getEnabled());
-
     }
 
     private void mockPerson() {

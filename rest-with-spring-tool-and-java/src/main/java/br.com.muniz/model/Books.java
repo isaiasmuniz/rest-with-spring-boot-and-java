@@ -19,7 +19,7 @@ public class Books implements Serializable {
     @Column(name = "author", nullable = true)
     private String authorName;
 
-    @Column(name = "launch_date", nullable = false)
+    @Column(name = "launch_date", nullable = true)
     private Date launchData;
 
     @Column(name = "price", nullable = false)

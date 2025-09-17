@@ -1,91 +1,74 @@
 package br.com.muniz.integrationtests.dto;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @XmlRootElement
-public class PersonDTOV1 implements Serializable {
+public class BookDTOV1 implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private long id;
-    private String firstName;
-    private String lastName;
-    private String adress;
-    private Boolean enabled;
-    private String gender;
+    private String authorName;
+    private Double price;
+    private String title;
 
-    public PersonDTOV1() {}
+    public BookDTOV1() {}
 
-    public PersonDTOV1(String firstName, long id, String gender, String adress, String lastName) {
-        this.firstName = firstName;
+    public BookDTOV1(long id, String authorName, Double price, String title) {
         this.id = id;
-        this.gender = gender;
-        this.adress = adress;
-        this.lastName = lastName;
+        this.authorName = authorName;
+        this.price = price;
+        this.title = title;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public BookDTOV1 setId(long id) {
         this.id = id;
+        return this;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public BookDTOV1 setAuthorName(String authorName) {
+        this.authorName = authorName;
+        return this;
     }
 
-    public String getLastName() {
-        return lastName;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public BookDTOV1 setPrice(Double price) {
+        this.price = price;
+        return this;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getTitle() {
+        return title;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public PersonDTOV1 setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public BookDTOV1 setTitle(String title) {
+        this.title = title;
         return this;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof PersonDTOV1 that)) return false;
-        return id == that.id && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(adress, that.adress) && Objects.equals(enabled, that.enabled) && Objects.equals(gender, that.gender);
+        if (!(o instanceof BookDTOV1 bookDTOV1)) return false;
+        return id == bookDTOV1.id && Objects.equals(authorName, bookDTOV1.authorName) && Objects.equals(price, bookDTOV1.price) && Objects.equals(title, bookDTOV1.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, adress, enabled, gender);
+        return Objects.hash(id, authorName, price, title);
     }
 }
 

@@ -8,20 +8,20 @@ import java.io.Serializable;
 import java.util.List;
 
 @XmlRootElement
-public class PageModel implements Serializable {
+public class PageModelPerson implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @XmlElement(name = "content")
     public List<PersonDTOV1> content;
 
-    public PageModel() {}
+    public PageModelPerson() {}
 
     public List<PersonDTOV1> getContent() {
         return content;
     }
 
-    public PageModel setContent(List<PersonDTOV1> content) {
+    public PageModelPerson setContent(List<PersonDTOV1> content) {
         this.content = content;
         return this;
     }

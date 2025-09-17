@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,11 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal server error", responseCode = "500", content = @Content)
             }
     )
-    List<BooksDTOV1> findAll();
+     ResponseEntity<PagedModel<EntityModel<BooksDTOV1>>> findAll(
+             @RequestParam(value = "page", defaultValue = "0") Integer page,
+             @RequestParam(value = "size", defaultValue = "15'") Integer size,
+             @RequestParam(value = "Direction", defaultValue = "asc") String direction
+    );
 
     @Operation(summary = "Find by id", description = "Finds one person", tags = "people",
             responses = {

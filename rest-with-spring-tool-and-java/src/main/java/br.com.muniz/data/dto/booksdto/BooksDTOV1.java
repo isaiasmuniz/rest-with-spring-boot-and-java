@@ -2,11 +2,13 @@ package br.com.muniz.data.dto.booksdto;
 
 import jakarta.persistence.Column;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+@Relation(collectionRelation = "book")
 public class BooksDTOV1 extends RepresentationModel<BooksDTOV1> implements Serializable {
 
     private static final long serialVersionUID = 1l;

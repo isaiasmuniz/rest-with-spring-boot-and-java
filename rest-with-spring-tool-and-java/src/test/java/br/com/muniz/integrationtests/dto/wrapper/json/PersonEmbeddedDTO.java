@@ -1,4 +1,4 @@
-package br.com.muniz.integrationtests.dto.wrapper;
+package br.com.muniz.integrationtests.dto.wrapper.json;
 
 import br.com.muniz.integrationtests.dto.PersonDTOV1;
 import com.fasterxml.jackson.annotation.JsonProperty;

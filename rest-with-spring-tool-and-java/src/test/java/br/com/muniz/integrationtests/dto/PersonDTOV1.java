@@ -1,37 +1,21 @@
-package br.com.muniz.data.dto.persondto;
+package br.com.muniz.integrationtests.dto;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@XmlRootElement
+public class PersonDTOV1 implements Serializable {
 
-//@JsonPropertyOrder({"id, first_name, last_name, gender, adress"})
-//@JsonFilter("persinFilter")
-public class PersonDTOV1 extends RepresentationModel<PersonDTOV1> implements Serializable {
-
-    private static final long serialVersionUID = 1l;
+    private static final long serialVersionUID = 1L;
 
     private long id;
-
-    //@JsonProperty("first_name")
     private String firstName;
-
-    //@JsonProperty("last_name")
-    //@JsonInclude(JsonInclude.Include.NON_NULL)
     private String lastName;
     private String adress;
-
-    //private String sensitveData;
-
-//    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-//    private String phoneNumber;
-
-//    @JsonFormat(pattern = "dd/MM/yyyy")
-//    private String birthday;
-
-    //@JsonIgnore
-  //  @JsonSerialize(using = GenderSerializer.class)
+    private Boolean enabled;
     private String gender;
 
     public PersonDTOV1() {}
@@ -76,14 +60,6 @@ public class PersonDTOV1 extends RepresentationModel<PersonDTOV1> implements Ser
         this.adress = adress;
     }
 
-//    public String getBirthday() {
-//        return birthday;
-//    }
-//
-//    public void setBirthday(String birthday) {
-//        this.birthday = birthday;
-//    }
-
     public String getGender() {
         return gender;
     }
@@ -92,32 +68,24 @@ public class PersonDTOV1 extends RepresentationModel<PersonDTOV1> implements Ser
         this.gender = gender;
     }
 
-//    public String getPhoneNumber() {
-//        return phoneNumber;
-//    }
-//
-//    public void setPhoneNumber(String phoneNumber) {
-//        this.phoneNumber = phoneNumber;
-//    }
-//
-//    public String getSensitveData() {
-//        return sensitveData;
-//    }
-//
-//    public void setSensitveData(String sensitveData) {
-//        this.sensitveData = sensitveData;
-//    }
+    public Boolean getEnabled() {
+        return enabled;
+    }
 
+    public PersonDTOV1 setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PersonDTOV1 that)) return false;
-        return id == that.id && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(adress, that.adress) && Objects.equals(gender, that.gender);
+        return id == that.id && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(adress, that.adress) && Objects.equals(enabled, that.enabled) && Objects.equals(gender, that.gender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, adress, gender);
+        return Objects.hash(id, firstName, lastName, adress, enabled, gender);
     }
 }
 

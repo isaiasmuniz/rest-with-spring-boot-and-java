@@ -1,21 +1,28 @@
-package br.com.muniz.integrationtests.controllers.withXml;
+package br.com.muniz.integrationtests.controllers.withYml;
 
 import br.com.muniz.config.TestConig;
+import br.com.muniz.integrationtests.controllers.withYml.converter.YamlConverter;
 import br.com.muniz.integrationtests.dto.PersonDTOV1;
+import br.com.muniz.integrationtests.dto.wrapper.xml.PageModelPerson;
 import br.com.muniz.integrationtests.integrationTestsContainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.EncoderConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -24,16 +31,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerXmlTest extends AbstractIntegrationTest{
+class PersonControllerYmlTest extends AbstractIntegrationTest{
 
     private static RequestSpecification specification;
-    private static XmlMapper objectMapper;
+    private static YamlConverter objectMapper;
     private static PersonDTOV1 person;
 
     @BeforeAll
     static void setUp() {
-        objectMapper = new XmlMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper = new YamlConverter();
         person = new PersonDTOV1();
     }
 
@@ -50,20 +56,23 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .build();
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
-                .accept(MediaType.APPLICATION_XML_VALUE)
-                .body(person)
+        var createdPerson = given().config(
+                RestAssuredConfig.config()
+                        .encoderConfig(EncoderConfig.encoderConfig()
+                                .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+        ).spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .body(person, objectMapper)
                 .when()
                 .post()
                 .then()
                 .statusCode(200)
                 .extract()
                 .body()
-                .asString();
+                .as(PersonDTOV1.class, objectMapper);
 
 
-        PersonDTOV1 createdPerson = objectMapper.readValue(content, PersonDTOV1.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -79,9 +88,13 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
     @Order(2)
     void findBiIdTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(EncoderConfig.encoderConfig()
+                                        .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                ).spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                 .pathParams("id", person.getId())
                 .when()
                 .get("{id}")
@@ -89,10 +102,9 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
                 .statusCode(200)
                 .extract()
                 .body()
-                .asString();
+                .as(PersonDTOV1.class, objectMapper);
 
 
-        PersonDTOV1 createdPerson = objectMapper.readValue(content, PersonDTOV1.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -113,20 +125,23 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
         person.setFirstName("isaias");
         person.setAdress("fortal city");
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
-                .accept(MediaType.APPLICATION_XML_VALUE)
-                .body(person)
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(EncoderConfig.encoderConfig()
+                                        .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                ).spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .body(person, objectMapper)
                 .when()
                 .put()
                 .then()
                 .statusCode(200)
                 .extract()
                 .body()
-                .asString();
+                .as(PersonDTOV1.class, objectMapper);
 
 
-        PersonDTOV1 createdPerson = objectMapper.readValue(content, PersonDTOV1.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -146,9 +161,13 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
 
         person.setEnabled(false);
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(EncoderConfig.encoderConfig()
+                                        .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                ).spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                 .pathParam("id", person.getId())
                 .when()
                 .patch("{id}")
@@ -156,10 +175,9 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
                 .statusCode(200)
                 .extract()
                 .body()
-                .asString();
+                .as(PersonDTOV1.class, objectMapper);
 
 
-        PersonDTOV1 createdPerson = objectMapper.readValue(content, PersonDTOV1.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -186,18 +204,19 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
     @Order(6)
     void findAllTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+        var response = given(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .queryParams("page", 3, "size", 12, "direction", "asc")
                 .when()
                 .get()
                 .then()
                 .statusCode(200)
                 .extract()
                 .body()
-                .asString();
+                .as(PageModelPerson.class, objectMapper);
 
-        List<PersonDTOV1> perons = objectMapper.readValue(content, new TypeReference<List<PersonDTOV1>>() {});
+        List<PersonDTOV1> perons = response.getContent();
 
         PersonDTOV1 personOne = perons.get(0);
         person = personOne;
@@ -205,23 +224,22 @@ class PersonControllerXmlTest extends AbstractIntegrationTest{
 
         assertNotNull(personOne.getId());
 
-        assertEquals("Pedro", personOne.getFirstName());
-        assertEquals("Matador", personOne.getLastName());
-        assertEquals("Parangaba - Fortaleza - CE - 6669", personOne.getAdress());
-        assertEquals("female", personOne.getGender());
-        assertTrue(personOne.getEnabled());
+        assertEquals("Allianora", personOne.getFirstName());
+        assertEquals("Whardley", personOne.getLastName());
+        assertEquals("Room 847", personOne.getAdress());
+        assertEquals("Female", personOne.getGender());
+        assertFalse(personOne.getEnabled());
 
         PersonDTOV1 personSeven = perons.get(2);
         person = personSeven;
 
         assertNotNull(personSeven.getId());
 
-        assertEquals("Braian", personSeven.getFirstName());
-        assertEquals("Temoteo", personSeven.getLastName());
-        assertEquals("Maranguape - Fortaleza - CE", personSeven.getAdress());
-        assertEquals("male", personSeven.getGender());
+        assertEquals("Amalle", personSeven.getFirstName());
+        assertEquals("Dundredge", personSeven.getLastName());
+        assertEquals("PO Box 16019", personSeven.getAdress());
+        assertEquals("Female", personSeven.getGender());
         assertTrue(personSeven.getEnabled());
-
     }
 
     private void mockPerson() {
